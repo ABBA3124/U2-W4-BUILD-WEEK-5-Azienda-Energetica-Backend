@@ -15,4 +15,8 @@ public class ComuneService {
     public Comune save(Comune nuovoComune) {
         return comuneRepository.save(nuovoComune);
     }
+
+    public boolean esistonoComuni() {
+        return comuneRepository.count() > 0;
+    }
 }

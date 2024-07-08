@@ -20,4 +20,8 @@ public class ProvinciaService {
     public Optional<Provincia> findByName(String name) {
         return provinciaRepository.findByNome(name);
     }
+
+    public boolean esistonoProvince() {
+        return provinciaRepository.count() > 0;
+    }
 }
