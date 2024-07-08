@@ -1,16 +1,24 @@
 package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
-public class Utente {
+@JsonIgnoreProperties({"password", "role", "authorities", "enabled", "accountNonExpired", "credentialsNonExpired", "accountNonLocked"})
+public class Utente implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private UUID id;
 
     private String username;
     private String email;
@@ -22,4 +30,29 @@ public class Utente {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "utente_ruoli", joinColumns = @JoinColumn(name = "utente_id"), inverseJoinColumns = @JoinColumn(name = "ruolo_id"))
     private Set<Ruolo> ruoli;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return ruoli.stream().map(ruolo -> new SimpleGrantedAuthority(ruolo.getRole().name())).collect(Collectors.toSet());
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
