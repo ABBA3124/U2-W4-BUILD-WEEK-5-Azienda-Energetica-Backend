@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CsvImportService {
@@ -49,6 +52,8 @@ public class CsvImportService {
         String line;
         boolean firstLine = true;
 
+        Set<String> provinceSbagliate = new HashSet<>();
+
         while ((line = bufferedReader.readLine()) != null) {
             if (firstLine) {
                 firstLine = false;
@@ -56,12 +61,24 @@ public class CsvImportService {
             }
 
             String[] values = line.split(";");
-            if (values.length >= 3) {
-                Provincia provinciaDelComune = provinciaService.findByName(values[3].trim());
-                Comune nuovoComune = new Comune(values[2].trim(), provinciaDelComune);
-                comuneService.save(nuovoComune);
+
+            if (values.length > 3) {
+                Optional<Provincia> optionalProvincia = provinciaService.findByName(values[3].trim());
+
+                if (!optionalProvincia.isPresent()) {
+                    provinceSbagliate.add(values[3].trim());
+                } else {
+                    Provincia provinciaDelComune = optionalProvincia.get();
+                    Comune nuovoComune = new Comune(values[2].trim(), provinciaDelComune);
+                    comuneService.save(nuovoComune);
+                }
+
+
             }
         }
         bufferedReader.close();
+        System.out.println("Lista delle province non inserite:");
+
+        provinceSbagliate.forEach(System.out::println);
     }
 }

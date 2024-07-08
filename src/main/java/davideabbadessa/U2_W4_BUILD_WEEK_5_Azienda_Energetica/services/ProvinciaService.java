@@ -5,6 +5,8 @@ import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.repositories.Provin
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ProvinciaService {
     @Autowired
@@ -15,7 +17,7 @@ public class ProvinciaService {
         return provinciaRepository.save(nuovaProvincia);
     }
 
-    public Provincia findByName(String name) {
-        return provinciaRepository.findByNome(name).orElseThrow(RuntimeException::new);
+    public Optional<Provincia> findByName(String name) {
+        return provinciaRepository.findByNome(name);
     }
 }
