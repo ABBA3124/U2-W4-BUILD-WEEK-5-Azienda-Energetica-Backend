@@ -11,11 +11,10 @@ import java.util.Date;
 
 @Component
 public class JWTTokenConfiguration {
+
+    @Value("${JWT_SECRET}")
     private String secret;
 
-    public JWTTokenConfiguration(@Value("${jwt.secret}") String secret) {
-        this.secret = secret;
-    }
 
     public String createToken(Utente utente) {
         return Jwts.builder()
@@ -30,7 +29,7 @@ public class JWTTokenConfiguration {
         try {
             Jwts.parser().verifyWith(Keys.hmacShaKeyFor(secret.getBytes())).build().parse(token);
         } catch (Exception ex) {
-            throw new UnauthorizedException("Errore col token, preghiamo di riprovare a fare il login!");
+            throw new UnauthorizedException("Problemi con il token, preghiamo di riprovare più tardi, se il problema persiste contatta il gestore.");
         }
     }
 

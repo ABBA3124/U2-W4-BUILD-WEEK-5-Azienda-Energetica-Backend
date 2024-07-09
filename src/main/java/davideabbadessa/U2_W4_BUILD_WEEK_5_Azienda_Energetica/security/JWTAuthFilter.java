@@ -20,10 +20,13 @@ import java.util.UUID;
 
 @Component
 public class JWTAuthFilter extends OncePerRequestFilter {
-    @Autowired
-    private JWTTokenConfiguration jwtTokenConfiguration;
+
     @Autowired
     private UtenteService utenteService;
+
+    @Autowired
+    private JWTTokenConfiguration jwtTokenConfiguration;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -33,8 +36,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         String accessToken = authHeader.substring(7);
         jwtTokenConfiguration.verifyToken(accessToken);
         String utenteId = jwtTokenConfiguration.extractIdFromToken(accessToken);
-        Utente current = utenteService.findById(UUID.fromString(utenteId));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(current, null, current.getAuthorities());
+        Utente currentUtente = utenteService.findById(UUID.fromString(utenteId));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(currentUtente, null, currentUtente.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
     }

@@ -37,7 +37,7 @@ public class Utente implements UserDetails {
         this.password = password;
         this.nome = nome;
         this.cognome = cognome;
-        this.avatar = "https://ui-avatars.com/api/?name=" + nome + "+" + cognome;
+//        this.avatar = "https://ui-avatars.com/api/?name=" + nome + "+" + cognome;
         this.ruoli = Set.of(new Ruolo(Role.USER));
     }
 

@@ -18,10 +18,10 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String authenticateUserAndGenerateToken(UtenteLoginDTO body) {
-        Utente dipendente = this.utenteService.findByEmail(body.email());
-        if (passwordEncoder.matches(body.password(), dipendente.getPassword())) {
-            return jwtTokenConfiguration.createToken(dipendente);
+    public String authenticateUtenteAndGenerateToken(UtenteLoginDTO body) {
+        Utente nuovoUtente = this.utenteService.findByEmail(body.email());
+        if (passwordEncoder.matches(body.password(), nuovoUtente.getPassword())) {
+            return jwtTokenConfiguration.createToken(nuovoUtente);
         } else {
             throw new UnauthorizedException("Credenziali non corrette!");
         }
