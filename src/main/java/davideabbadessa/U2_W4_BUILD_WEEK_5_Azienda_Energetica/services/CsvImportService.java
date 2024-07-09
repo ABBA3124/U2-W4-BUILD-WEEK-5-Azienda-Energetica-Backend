@@ -3,20 +3,21 @@ package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services;
 
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Comune;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Provincia;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 public class CsvImportService {
 
-    private static final Logger log = LoggerFactory.getLogger(CsvImportService.class);
     @Autowired
     private ProvinciaService provinciaService;
 
@@ -42,11 +43,11 @@ public class CsvImportService {
         }
         bufferedReader.close();
 
-        Provincia roma = provinciaService.findByName("Roma").get();
+        Provincia roma = provinciaService.findByName("Roma");
         roma.setSigla("RM");
         provinciaService.save(roma);
 
-        Provincia forliCesena = provinciaService.findByName("Forli-Cesena").get();
+        Provincia forliCesena = provinciaService.findByName("Forli-Cesena");
         forliCesena.setNome("Forlì-Cesena");
         provinciaService.save(forliCesena);
 
@@ -55,11 +56,11 @@ public class CsvImportService {
         provinciaService.save(new Provincia("Sud Sardegna", "SU", "Sardegna"));
         provinciaService.save(new Provincia("Verbano-Cusio-Ossola", "VCO", "Piemonte"));
 
-        provinciaService.delete(provinciaService.findByName("Olbia Tempio").get());
-        provinciaService.delete(provinciaService.findByName("Carbonia Iglesias").get());
-        provinciaService.delete(provinciaService.findByName("Ogliastra").get());
-        provinciaService.delete(provinciaService.findByName("Verbania").get());
-        provinciaService.delete(provinciaService.findByName("Medio Campidano").get());
+        provinciaService.delete(provinciaService.findByName("Olbia Tempio"));
+        provinciaService.delete(provinciaService.findByName("Carbonia Iglesias"));
+        provinciaService.delete(provinciaService.findByName("Ogliastra"));
+        provinciaService.delete(provinciaService.findByName("Verbania"));
+        provinciaService.delete(provinciaService.findByName("Medio Campidano"));
     }
 
 
@@ -96,14 +97,12 @@ public class CsvImportService {
                     values[3] = provinceMap.get(values[3].trim());
                 }
 
-                Optional<Provincia> optionalProvincia = provinciaService.findByName(values[3].trim());
-
-                if (!optionalProvincia.isPresent()) {
+                try {
+                    Provincia prov = provinciaService.findByName(values[3].trim());
+                    Comune comune = new Comune(values[2].trim(), prov);
+                    comuneService.save(comune);
+                } catch (NotFoundException e) {
                     provinceSbagliate.add(values[3].trim());
-                } else {
-                    Provincia provinciaDelComune = optionalProvincia.get();
-                    Comune nuovoComune = new Comune(values[2].trim(), provinciaDelComune);
-                    comuneService.save(nuovoComune);
                 }
 
 
