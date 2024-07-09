@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class CsvImportService {
@@ -44,6 +42,18 @@ public class CsvImportService {
         }
         bufferedReader.close();
 
+        Provincia roma = provinciaService.findByName("Roma").get();
+        roma.setSigla("RM");
+        provinciaService.save(roma);
+
+        Provincia forliCesena = provinciaService.findByName("Forli-Cesena").get();
+        forliCesena.setNome("Forlì-Cesena");
+        provinciaService.save(forliCesena);
+
+        provinciaService.save(forliCesena);
+
+        provinciaService.save(new Provincia("Sud Sardegna", "SU", "Sardegna"));
+        provinciaService.save(new Provincia("Verbano-Cusio-Ossola", "VCO", "Piemonte"));
     }
 
 
@@ -54,6 +64,17 @@ public class CsvImportService {
 
         Set<String> provinceSbagliate = new HashSet<>();
 
+        Map<String, String> provinceMap = new HashMap<>();
+        provinceMap.put("Monza e della Brianza", "Monza-Brianza");
+        provinceMap.put("Vibo Valentia", "Vibo-Valentia");
+        provinceMap.put("La Spezia", "La-Spezia");
+        provinceMap.put("Valle d'Aosta/Vallée d'Aoste", "Aosta");
+        provinceMap.put("Ascoli Piceno", "Ascoli-Piceno");
+        provinceMap.put("Bolzano/Bozen", "Bolzano");
+        provinceMap.put("Pesaro e Urbino", "Pesaro-Urbino");
+        provinceMap.put("Reggio Calabria", "Reggio-Calabria");
+        provinceMap.put("Reggio nell'Emilia", "Reggio-Emilia");
+
         while ((line = bufferedReader.readLine()) != null) {
             if (firstLine) {
                 firstLine = false;
@@ -62,7 +83,13 @@ public class CsvImportService {
 
             String[] values = line.split(";");
 
+
             if (values.length > 3) {
+
+                if (provinceMap.containsKey(values[3].trim())) {
+                    values[3] = provinceMap.get(values[3].trim());
+                }
+
                 Optional<Provincia> optionalProvincia = provinciaService.findByName(values[3].trim());
 
                 if (!optionalProvincia.isPresent()) {

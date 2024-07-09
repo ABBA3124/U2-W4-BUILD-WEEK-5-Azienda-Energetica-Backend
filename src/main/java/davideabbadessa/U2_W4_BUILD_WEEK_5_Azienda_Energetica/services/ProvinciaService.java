@@ -24,4 +24,5 @@ public class ProvinciaService {
     public boolean esistonoProvince() {
         return provinciaRepository.count() > 0;
     }
+
 }
