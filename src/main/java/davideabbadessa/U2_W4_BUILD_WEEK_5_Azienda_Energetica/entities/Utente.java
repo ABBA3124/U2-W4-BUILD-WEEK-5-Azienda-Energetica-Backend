@@ -31,6 +31,16 @@ public class Utente implements UserDetails {
     @JoinTable(name = "utente_ruoli", joinColumns = @JoinColumn(name = "utente_id"), inverseJoinColumns = @JoinColumn(name = "ruolo_id"))
     private Set<Ruolo> ruoli;
 
+    public Utente(String username, String email, String password, String nome, String cognome) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.avatar = "https://ui-avatars.com/api/?name=" + nome + "+" + cognome;
+        this.ruoli = Set.of(new Ruolo(Role.USER));
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return ruoli.stream().map(ruolo -> new SimpleGrantedAuthority(ruolo.getRole().name())).collect(Collectors.toSet());

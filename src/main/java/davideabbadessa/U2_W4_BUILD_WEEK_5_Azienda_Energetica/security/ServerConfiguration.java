@@ -44,6 +44,6 @@ public class ServerConfiguration {
 
     @Bean
     PasswordEncoder getBCrypt() {
-        return new BCryptPasswordEncoder(16);
+        return new BCryptPasswordEncoder(13);
     }
 }

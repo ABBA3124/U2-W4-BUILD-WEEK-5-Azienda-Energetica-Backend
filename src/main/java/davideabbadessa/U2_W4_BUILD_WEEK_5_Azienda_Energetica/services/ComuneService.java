@@ -19,4 +19,5 @@ public class ComuneService {
     public boolean esistonoComuni() {
         return comuneRepository.count() > 0;
     }
+
 }
