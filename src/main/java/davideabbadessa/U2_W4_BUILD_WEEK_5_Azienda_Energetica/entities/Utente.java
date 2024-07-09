@@ -3,6 +3,7 @@ package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Data
 @Entity
+@NoArgsConstructor
 @JsonIgnoreProperties({"password", "role", "authorities", "enabled", "accountNonExpired", "credentialsNonExpired", "accountNonLocked"})
 public class Utente implements UserDetails {
     @Id
@@ -38,7 +40,6 @@ public class Utente implements UserDetails {
         this.nome = nome;
         this.cognome = cognome;
         this.avatar = "https://ui-avatars.com/api/?name=" + nome + "+" + cognome;
-        this.ruoli = Set.of(new Ruolo(Role.USER));
     }
 
     @Override
