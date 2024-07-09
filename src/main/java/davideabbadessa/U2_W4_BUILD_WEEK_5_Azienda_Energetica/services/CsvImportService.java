@@ -54,6 +54,12 @@ public class CsvImportService {
 
         provinciaService.save(new Provincia("Sud Sardegna", "SU", "Sardegna"));
         provinciaService.save(new Provincia("Verbano-Cusio-Ossola", "VCO", "Piemonte"));
+
+        provinciaService.delete(provinciaService.findByName("Olbia Tempio").get());
+        provinciaService.delete(provinciaService.findByName("Carbonia Iglesias").get());
+        provinciaService.delete(provinciaService.findByName("Ogliastra").get());
+        provinciaService.delete(provinciaService.findByName("Verbania").get());
+        provinciaService.delete(provinciaService.findByName("Medio Campidano").get());
     }
 
 
