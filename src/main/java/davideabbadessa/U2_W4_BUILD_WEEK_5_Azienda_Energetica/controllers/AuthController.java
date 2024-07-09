@@ -2,7 +2,7 @@ package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.controllers;
 
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Utente;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.exceptions.BadRequestException;
-import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NuovoUtenteDTO;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewUtenteDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.UtenteLoginDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.UtenteLoginResponseDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.AuthService;
@@ -36,7 +36,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public Utente register(@RequestBody @Validated NuovoUtenteDTO nuovoUtenteDTO, BindingResult validationResult) {
+    public Utente register(@RequestBody @Validated NewUtenteDTO nuovoUtenteDTO, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             throw new BadRequestException(validationResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(", ")));
         }
