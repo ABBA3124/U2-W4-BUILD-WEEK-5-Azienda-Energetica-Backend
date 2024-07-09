@@ -17,25 +17,16 @@ public class Cliente {
     private UUID id;
 
     private String ragioneSociale;
-
     private String partitaIva;
-
     private LocalDate dataInserimento;
     private LocalDate dataUltimoContatto;
     private double fatturatoAnnuale;
-
     private String pec;
-
     private String telefono;
-
     private String emailContatto;
-
     private String nomeContatto;
-
     private String cognomeContatto;
-
     private String telefonoContatto;
-
     private String logoAziendale;
 
     @OneToOne
