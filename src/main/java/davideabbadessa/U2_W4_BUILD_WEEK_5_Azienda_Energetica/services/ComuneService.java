@@ -58,4 +58,8 @@ public class ComuneService {
         return comuneRepository.save(comune);
     }
 
+    public Comune trovaConNome(String name) {
+        return comuneRepository.findByName(name).orElseThrow(() -> new NotFoundException("Comune non trovato!"));
+    }
+
 }

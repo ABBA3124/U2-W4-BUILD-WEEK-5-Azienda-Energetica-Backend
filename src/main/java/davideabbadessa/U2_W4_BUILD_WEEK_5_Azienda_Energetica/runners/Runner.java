@@ -1,8 +1,8 @@
 package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.runners;
 
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Provincia;
-import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Role;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Ruolo;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.Role;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.repositories.RuoloRepository;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.ComuneService;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.CsvImportService;

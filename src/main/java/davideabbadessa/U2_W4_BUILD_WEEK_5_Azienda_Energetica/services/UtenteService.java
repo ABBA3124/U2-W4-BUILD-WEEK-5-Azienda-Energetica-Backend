@@ -1,7 +1,9 @@
 package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services;
 
-import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Role;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Ruolo;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Utente;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.Role;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.exceptions.BadRequestException;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.exceptions.NotFoundException;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewUtenteDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.repositories.UtenteRepository;
@@ -11,10 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -37,8 +38,13 @@ public class UtenteService {
     }
 
     public Utente save(NewUtenteDTO nuovoUtenteDTO) {
+        Ruolo found = ruoloService.findByRole(Role.USER);
         Utente nuovoUtente = new Utente(nuovoUtenteDTO.username(), nuovoUtenteDTO.email(), passwordEncoder.encode(nuovoUtenteDTO.password()), nuovoUtenteDTO.nome(), nuovoUtenteDTO.cognome());
-        nuovoUtente.setRuoli(Set.of(ruoloService.findByRole(Role.USER)));
+        if (!nuovoUtente.getRuoli().contains(found)) {
+            nuovoUtente.setRuoli(List.of(found));
+        } else {
+            throw new BadRequestException("L'utente " + nuovoUtenteDTO.nome() + " possiede già questo ruolo");
+        }
         return utenteRepository.save(nuovoUtente);
     }
 

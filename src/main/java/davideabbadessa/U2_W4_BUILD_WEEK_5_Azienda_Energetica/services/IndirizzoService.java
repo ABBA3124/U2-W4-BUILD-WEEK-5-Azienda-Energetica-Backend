@@ -1,5 +1,6 @@
 package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services;
 
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Indirizzo;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.repositories.IndirizzoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,4 +9,8 @@ import org.springframework.stereotype.Service;
 public class IndirizzoService {
     @Autowired
     private IndirizzoRepository indirizzoRepository;
+
+    public Indirizzo save(Indirizzo indirizzo) {
+        return indirizzoRepository.save(indirizzo);
+    }
 }

@@ -1,20 +1,17 @@
 package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.hibernate.validator.constraints.URL;
-
-import java.time.LocalDate;
 
 public record NewClienteDTO(
         @NotEmpty(message = "La ragione sociale deve essere un dato obbligatorio")
         String ragioneSociale,
+        @NotBlank
+        String tipoCliente,
         @NotEmpty(message = "La partita IVA deve essere un dato obbligatorio")
         String partitaIva,
-        @NotEmpty(message = "la data di inserimento deve essere obbligatoria")
-        String dataInserimento,
-        @NotEmpty(message = "la data dell'ultimo contatto deve essere obbligatoria")
         String dataUltimoContatto,
         @NotNull()
         double fatturatoAnnuale,
@@ -33,5 +30,22 @@ public record NewClienteDTO(
         String cognomeContatto,
         @NotEmpty(message = "Il numero di telefono deve essere obbligatorio")
         @Size(min = 10, max = 10, message = "Il numero fornito non è valido")
-        String telefonoContatto
-) {}
+        String telefonoContatto,
+        @NotEmpty
+        String viaSedeLegale,
+        @NotEmpty
+        String civicoSedeLegale,
+        @NotEmpty
+        String capSedeLegale,
+        @NotEmpty
+        String nomeComuneSedeLegale,
+        @NotEmpty
+        String viaSedeOperativa,
+        @NotEmpty
+        String civicoSedeOperativa,
+        @NotEmpty
+        String capSedeOperativa,
+        @NotEmpty
+        String nomeComuneSedeOperativa
+) {
+}

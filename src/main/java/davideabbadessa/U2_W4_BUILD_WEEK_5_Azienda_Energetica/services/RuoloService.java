@@ -1,7 +1,7 @@
 package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services;
 
-import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Role;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Ruolo;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.Role;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.exceptions.NotFoundException;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewRuoloDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.repositories.RuoloRepository;
@@ -21,6 +21,4 @@ public class RuoloService {
     public Ruolo findByRole(Role role) {
         return ruoloRepository.findByRole(role).orElseThrow(() -> new NotFoundException("Ruolo " + role + " non trovato!"));
     }
-
-
 }
