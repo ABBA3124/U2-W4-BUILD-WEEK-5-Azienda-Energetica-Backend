@@ -49,6 +49,7 @@ public class Cliente {
         this.tipoClienti = tipoClienti;
         this.partitaIva = partitaIva;
         this.dataInserimento = LocalDate.now();
+        this.dataUltimoContatto = null;
         this.fatturatoAnnuale = fatturatoAnnuale;
         this.pec = pec;
         this.telefono = telefono;

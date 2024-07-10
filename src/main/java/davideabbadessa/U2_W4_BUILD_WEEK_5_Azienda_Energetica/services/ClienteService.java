@@ -15,6 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 @Service
 public class ClienteService {
 
@@ -38,7 +42,17 @@ public class ClienteService {
         Comune comuneClienteOperativo = comuneService.trovaConNome(body.nomeComuneSedeOperativa());
         Indirizzo indirizzoOperativo = new Indirizzo(body.viaSedeOperativa(), body.civicoSedeOperativa(), body.capSedeOperativa(), comuneClienteOperativo, TipoIndirizzo.SEDE_OPERATIVA);
         indirizzoOperativo.setLocalita(comuneClienteOperativo.getProvincia().getNome());
-        return clienteRepository.save(new Cliente(body.ragioneSociale(),
+
+        LocalDate dataUltimoContatto = null;
+        if (body.dataUltimoContatto() != null && !body.dataUltimoContatto().isEmpty()) {
+            try {
+                dataUltimoContatto = LocalDate.parse(body.dataUltimoContatto(), DateTimeFormatter.ISO_LOCAL_DATE);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Data di ultimo contatto non valida");
+            }
+        }
+
+        Cliente nuovoCliente = new Cliente(body.ragioneSociale(),
                 TipoClienti.getTipoClienti(body.tipoCliente().toUpperCase()),
                 body.partitaIva(),
                 body.fatturatoAnnuale(),
@@ -50,6 +64,17 @@ public class ClienteService {
                 body.telefonoContatto(),
                 indirizzoService.save(indirizzoSedeLegale),
                 indirizzoService.save(indirizzoOperativo)
-        ));
+        );
+
+        nuovoCliente.setDataUltimoContatto(dataUltimoContatto);
+
+
+        return clienteRepository.save(nuovoCliente);
+    }
+
+    public Page<Cliente> ordinaTuttiIClientiPerProvincia(int pageNumber, int pageSize, String sortby) {
+        if (pageSize > 100) pageSize = 100;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortby));
+        return clienteRepository.findAllByOrderByIndirizzoLegaleLocalitaAsc(pageable);
     }
 }

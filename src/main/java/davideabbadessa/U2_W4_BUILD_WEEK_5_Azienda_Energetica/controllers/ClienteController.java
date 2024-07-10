@@ -37,4 +37,9 @@ public class ClienteController {
         }
         return clienteService.save(body);
     }
+
+    @GetMapping("/order-by-localita")
+    public Page<Cliente> getAllClientiOrderByLocalita(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sortBy) {
+        return this.clienteService.ordinaTuttiIClientiPerProvincia(page, size, sortBy);
+    }
 }
