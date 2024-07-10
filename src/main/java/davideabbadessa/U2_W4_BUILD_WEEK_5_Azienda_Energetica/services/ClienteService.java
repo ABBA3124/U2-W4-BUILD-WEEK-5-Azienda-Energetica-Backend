@@ -6,6 +6,7 @@ import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Comune;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Indirizzo;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.TipoClienti;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.TipoIndirizzo;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.exceptions.NotFoundException;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewClienteDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,10 @@ public class ClienteService {
         if (pageSize > 100) pageSize = 100;
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortby));
         return clienteRepository.findAll(pageable);
+    }
+
+    public Cliente findByRagioneSociale(String ragioneSociale) {
+        return clienteRepository.findByRagioneSociale(ragioneSociale).orElseThrow(() -> new NotFoundException("Cliente non trovato!"));
     }
 
     public Cliente save(NewClienteDTO body) {

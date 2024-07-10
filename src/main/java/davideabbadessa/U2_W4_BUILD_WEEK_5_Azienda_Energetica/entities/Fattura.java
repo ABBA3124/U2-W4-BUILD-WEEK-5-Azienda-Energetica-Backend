@@ -17,7 +17,7 @@ public class Fattura {
 
     private LocalDate data;
     private double importo;
-    private String numero;
+    private int numero;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
@@ -26,4 +26,12 @@ public class Fattura {
     @ManyToOne
     @JoinColumn(name = "stato_id")
     private StatoFattura statoFattura;
+
+    public Fattura(LocalDate data, double importo, int numero, Cliente cliente, StatoFattura statoFattura) {
+        this.data = data;
+        this.importo = importo;
+        this.numero = numero;
+        this.cliente = cliente;
+        this.statoFattura = statoFattura;
+    }
 }

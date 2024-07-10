@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -17,4 +18,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
             "JOIN c.indirizzoLegale i " +
             "ORDER BY i.localita ASC")
     Page<Cliente> findAllByOrderByIndirizzoLegaleLocalitaAsc(Pageable pageable);
+
+    Optional<Cliente> findByRagioneSociale(String ragioneSociale);
 }

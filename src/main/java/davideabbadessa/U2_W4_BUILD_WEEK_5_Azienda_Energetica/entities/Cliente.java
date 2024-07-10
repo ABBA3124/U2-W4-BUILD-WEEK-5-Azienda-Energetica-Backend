@@ -1,5 +1,6 @@
 package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.TipoClienti;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Entity
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties({"fatture"})
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
