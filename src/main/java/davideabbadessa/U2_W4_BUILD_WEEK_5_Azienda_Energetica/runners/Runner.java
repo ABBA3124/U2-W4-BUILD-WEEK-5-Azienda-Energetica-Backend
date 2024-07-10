@@ -1,6 +1,9 @@
 package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.runners;
 
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Provincia;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Role;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Ruolo;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.repositories.RuoloRepository;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.ComuneService;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.CsvImportService;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.ProvinciaService;
@@ -23,6 +26,8 @@ public class Runner implements CommandLineRunner {
     @Autowired
     private ComuneService comuneService;
 
+    @Autowired
+    private RuoloRepository ruoloRepository;
 
     @Override
     @Transactional
@@ -39,6 +44,15 @@ public class Runner implements CommandLineRunner {
         System.out.println("Lista province senza comuni: ");
         List<Provincia> provinceSenzaComuni = provinciaService.trovaProvinceSenzaComuni();
         provinceSenzaComuni.forEach(System.out::println);
+
+        if (!ruoloRepository.existsByRole(Role.ADMIN)) {
+            ruoloRepository.save(new Ruolo(Role.ADMIN));
+        }
+
+        if (!ruoloRepository.existsByRole(Role.USER)) {
+            ruoloRepository.save(new Ruolo(Role.USER));
+        }
+
 
     }
 }
