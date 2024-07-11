@@ -27,7 +27,7 @@ public class FatturaService {
     @Autowired
     private StatoFatturaService statoFatturaService;
 
-    public Page<Fattura> getFattura(int pageNumber, int pageSize, String sortby) {
+    public Page<Fattura> getFatture(int pageNumber, int pageSize, String sortby) {
         if (pageSize > 100) pageSize = 100;
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortby));
         return fatturaRepository.findAll(pageable);
@@ -39,7 +39,6 @@ public class FatturaService {
         Fattura nuovaFattura = new Fattura(LocalDate.parse(body.data()), body.importo(), body.numero(), clienteFattura, statoFattura);
         return fatturaRepository.save(nuovaFattura);
     }
-
 
 
     public Page<Fattura> trovaTutteLeFattureConFiltri(String nome,
