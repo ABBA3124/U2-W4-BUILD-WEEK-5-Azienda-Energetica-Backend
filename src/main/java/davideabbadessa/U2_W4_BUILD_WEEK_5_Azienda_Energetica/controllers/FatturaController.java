@@ -5,6 +5,7 @@ import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.StatusFattura
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.exceptions.BadRequestException;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewFatturaDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.FatturaService;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.StatoFatturaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 public class FatturaController {
     @Autowired
     private FatturaService fatturaService;
+    @Autowired
+    private StatoFatturaService statoFatturaService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -67,16 +70,12 @@ public class FatturaController {
                                                  @RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "10") int size,
                                                  @RequestParam(defaultValue = "id") String sortBy) {
-        System.out.println("Filtri: ");
-        System.out.println("Nome: " + nome);
-        System.out.println("Stato Fattura: " + statoFattura);
-        System.out.println("Data Min: " + dataMin);
-        System.out.println("Data Max: " + dataMax);
-        System.out.println("Anno Min: " + annoMin);
-        System.out.println("Anno Max: " + annoMax);
-        System.out.println("Importo Min: " + importoMin);
-        System.out.println("Importo Max: " + importoMax);
-        return this.fatturaService.trovaTutteLeFattureConFiltri(nome, StatusFattura.getStatoFattura(statoFattura),
+        StatusFattura stato = null;
+        if (statoFattura != null) {
+            stato = StatusFattura.getStatoFattura(statoFattura);
+        }
+
+        return this.fatturaService.trovaTutteLeFattureConFiltri(nome, stato,
                 dataMin, dataMax, annoMin, annoMax, importoMin, importoMax, page, size, sortBy);
     }
 }
