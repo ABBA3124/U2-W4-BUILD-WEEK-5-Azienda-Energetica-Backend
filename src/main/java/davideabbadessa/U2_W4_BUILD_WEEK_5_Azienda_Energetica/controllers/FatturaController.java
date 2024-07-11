@@ -8,6 +8,7 @@ import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.FatturaSer
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.StatoFatturaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -61,8 +62,8 @@ public class FatturaController {
     @GetMapping("/filter")
     public Page<Fattura> getAllFattureWithFilter(@RequestParam(required = false) String nome,
                                                  @RequestParam(required = false) String statoFattura,
-                                                 @RequestParam(required = false) LocalDate dataMin,
-                                                 @RequestParam(required = false) LocalDate dataMax,
+                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataMin,
+                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataMax,
                                                  @RequestParam(required = false) Integer annoMin,
                                                  @RequestParam(required = false) Integer annoMax,
                                                  @RequestParam(required = false) Double importoMin,
@@ -74,6 +75,15 @@ public class FatturaController {
         if (statoFattura != null) {
             stato = StatusFattura.getStatoFattura(statoFattura);
         }
+        System.out.println("Filtri: ");
+        System.out.println("Nome: " + nome);
+        System.out.println("Stato: " + statoFattura);
+        System.out.println("Data min: " + dataMin);
+        System.out.println("Data max: " + dataMax);
+        System.out.println("Anno min: " + annoMin);
+        System.out.println("Anno max: " + annoMax);
+        System.out.println("Importo min: " + importoMin);
+        System.out.println("Importo max: " + importoMax);
 
         return this.fatturaService.trovaTutteLeFattureConFiltri(nome, stato,
                 dataMin, dataMax, annoMin, annoMax, importoMin, importoMax, page, size, sortBy);
