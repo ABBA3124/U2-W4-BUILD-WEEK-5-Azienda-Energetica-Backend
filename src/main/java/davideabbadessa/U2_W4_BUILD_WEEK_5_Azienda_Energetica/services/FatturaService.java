@@ -54,7 +54,7 @@ public class FatturaService {
                                                       String sortby) {
         if (pageSize > 100) pageSize = 100;
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortby));
-        return fatturaRepository.findWithFilters(nome, statoFatturaService.findByStatus(statoFattura),
+        return fatturaRepository.findWithFilters(nome, statoFattura,
                 dataMin, dataMax, annoMin, annoMax, importoMin, importoMax, pageable);
     }
 
