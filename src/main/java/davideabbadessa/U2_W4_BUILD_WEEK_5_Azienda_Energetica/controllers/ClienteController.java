@@ -14,6 +14,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 @RestController
@@ -41,5 +42,20 @@ public class ClienteController {
     @GetMapping("/order-by-localita")
     public Page<Cliente> getAllClientiOrderByLocalita(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sortBy) {
         return this.clienteService.ordinaTuttiIClientiPerProvincia(page, size, sortBy);
+    }
+
+    @GetMapping("/filter")
+    public Page<Cliente> getAllClientiWithFilter(@RequestParam(required = false) String ragioneSociale,
+                                                 @RequestParam(required = false) Double fatturatoAnnualeMin,
+                                                 @RequestParam(required = false) Double fatturatoAnnualeMax,
+                                                 @RequestParam(required = false) LocalDate dataInserimentoMin,
+                                                 @RequestParam(required = false) LocalDate dataInserimentoMax,
+                                                 @RequestParam(required = false) LocalDate dataUltimoContattoMin,
+                                                 @RequestParam(required = false) LocalDate dataUltimoContattoMax,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "10") int size,
+                                                 @RequestParam(defaultValue = "id") String sortBy) {
+        return this.clienteService.trovaTuttiConFiltri(ragioneSociale, fatturatoAnnualeMin,
+                fatturatoAnnualeMax, dataInserimentoMin, dataInserimentoMax, dataUltimoContattoMin, dataUltimoContattoMax, page, size, sortBy);
     }
 }

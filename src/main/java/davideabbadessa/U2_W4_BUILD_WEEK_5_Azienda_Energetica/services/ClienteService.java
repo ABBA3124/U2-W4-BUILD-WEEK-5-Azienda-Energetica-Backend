@@ -82,4 +82,20 @@ public class ClienteService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortby));
         return clienteRepository.findAllByOrderByIndirizzoLegaleLocalitaAsc(pageable);
     }
+
+    public Page<Cliente> trovaTuttiConFiltri(String ragioneSociale,
+                                             Double fatturatoAnnualeMin,
+                                             Double fatturatoAnnualeMax,
+                                             LocalDate dataInserimentoMin,
+                                             LocalDate dataInserimentoMax,
+                                             LocalDate dataUltimoContattoMin,
+                                             LocalDate dataUltimoContattoMax,
+                                             int pageNumber,
+                                             int pageSize,
+                                             String sortby) {
+        if (pageSize > 100) pageSize = 100;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortby));
+        return clienteRepository.findWithFilters(ragioneSociale, fatturatoAnnualeMin,
+                fatturatoAnnualeMax, dataInserimentoMin, dataInserimentoMax, dataUltimoContattoMin, dataUltimoContattoMax, pageable);
+    }
 }
