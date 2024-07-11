@@ -45,7 +45,7 @@ public class ClienteController {
     }
 
     @GetMapping("/filter")
-    public Page<Cliente> getAllClientiWithFilter(@RequestParam(required = false) String ragioneSociale,
+    public Page<Cliente> getAllClientiWithFilter(@RequestParam(required = false) String nome,
                                                  @RequestParam(required = false) Double fatturatoAnnualeMin,
                                                  @RequestParam(required = false) Double fatturatoAnnualeMax,
                                                  @RequestParam(required = false) LocalDate dataInserimentoMin,
@@ -55,7 +55,15 @@ public class ClienteController {
                                                  @RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "10") int size,
                                                  @RequestParam(defaultValue = "id") String sortBy) {
-        return this.clienteService.trovaTuttiConFiltri(ragioneSociale, fatturatoAnnualeMin,
+        System.out.println("Filtri: ");
+        System.out.println("Nome: " + nome);
+        System.out.println("FatturatoAnnualeMin: " + fatturatoAnnualeMin);
+        System.out.println("FatturatoAnnualeMax: " + fatturatoAnnualeMax);
+        System.out.println("DataInserimentoMin: " + dataInserimentoMin);
+        System.out.println("DataInserimentoMax: " + dataInserimentoMax);
+        System.out.println("DataUltimoContattoMin: " + dataUltimoContattoMin);
+        System.out.println("DataUltimoContattoMax: " + dataUltimoContattoMax);
+        return this.clienteService.trovaTuttiConFiltri(nome, fatturatoAnnualeMin,
                 fatturatoAnnualeMax, dataInserimentoMin, dataInserimentoMax, dataUltimoContattoMin, dataUltimoContattoMax, page, size, sortBy);
     }
 }

@@ -23,14 +23,15 @@ public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
 
     Optional<Cliente> findByRagioneSociale(String ragioneSociale);
 
-    @Query("SELECT c FROM Cliente c WHERE (:nome IS NULL OR c.ragioneSociale LIKE :nome) " +
+    @Query("SELECT c FROM Cliente c " +
+            "WHERE (:nome IS NULL OR c.ragioneSociale LIKE %:nome%) " +
             "AND (:fatturatoAnnualeMin IS NULL OR c.fatturatoAnnuale >= :fatturatoAnnualeMin ) " +
             "AND (:fatturatoAnnualeMax IS NULL OR c.fatturatoAnnuale <= :fatturatoAnnualeMax )" +
             "AND (:dataInserimentoMin IS NULL OR c.dataInserimento >= :dataInserimentoMin ) " +
             "AND (:dataInserimentoMax IS NULL OR c.dataInserimento <= :dataInserimentoMax )" +
             "AND (:dataUltimoContattoMin IS NULL OR c.dataUltimoContatto >= :dataUltimoContattoMin ) " +
             "AND (:dataUltimoContattoMax IS NULL OR c.dataUltimoContatto <= :dataUltimoContattoMax )")
-    Page<Cliente> findWithFilters(@Param("nome") String ragioneSociale,
+    Page<Cliente> findWithFilters(@Param("nome") String nome,
                                   @Param("fatturatoAnnualeMin") Double fatturatoAnnualeMin,
                                   @Param("fatturatoAnnualeMax") Double fatturatoAnnualeMax,
                                   @Param("dataInserimentoMin") LocalDate dataInserimentoMin,
