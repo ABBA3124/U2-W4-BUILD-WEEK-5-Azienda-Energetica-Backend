@@ -55,14 +55,6 @@ public class ClienteController {
                                                  @RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "10") int size,
                                                  @RequestParam(defaultValue = "id") String sortBy) {
-        System.out.println("Filtri: ");
-        System.out.println("Nome: " + nome);
-        System.out.println("FatturatoAnnualeMin: " + fatturatoAnnualeMin);
-        System.out.println("FatturatoAnnualeMax: " + fatturatoAnnualeMax);
-        System.out.println("DataInserimentoMin: " + dataInserimentoMin);
-        System.out.println("DataInserimentoMax: " + dataInserimentoMax);
-        System.out.println("DataUltimoContattoMin: " + dataUltimoContattoMin);
-        System.out.println("DataUltimoContattoMax: " + dataUltimoContattoMax);
         return this.clienteService.trovaTuttiConFiltri(nome, fatturatoAnnualeMin,
                 fatturatoAnnualeMax, dataInserimentoMin, dataInserimentoMax, dataUltimoContattoMin, dataUltimoContattoMax, page, size, sortBy);
     }

@@ -17,16 +17,16 @@ import java.util.UUID;
 public interface FatturaRepository extends JpaRepository<Fattura, UUID> {
 
     @Query("SELECT f FROM Fattura f " +
-            "JOIN f.cliente fc" +
-            "JOIN f.statoFattura fs" +
+            "JOIN f.cliente fc " +
+            "JOIN f.statoFattura fs " +
             "WHERE (:nome IS NULL OR fc.ragioneSociale LIKE %:nome%) " +
-            "AND (:statoFattura IS NULL OR fs.stato LIKE :statoFattura ) " +
-            "AND (:dataMin IS NULL OR f.data >= :dataMin ) " +
-            "AND (:dataMax IS NULL OR f.data <= :dataMax )" +
-            "AND (:annoMin IS NULL OR YEAR(f.data) >= :annoMin ) " +
-            "AND (:annoMax IS NULL OR YEAR(f.data) <= :annoMax )" +
-            "AND (:importoMin IS NULL OR f.importo >= :importoMin ) " +
-            "AND (:importoMax IS NULL OR f.importo <= :importoMax )")
+            "AND (:statoFattura IS NOT NULL OR fs.stato LIKE :statoFattura) " +
+            "AND (:dataMin IS NULL OR f.data >= :dataMin) " +
+            "AND (:dataMax IS NULL OR f.data <= :dataMax) " +
+            "AND (:annoMin IS NULL OR YEAR(f.data) >= :annoMin) " +
+            "AND (:annoMax IS NULL OR YEAR(f.data) <= :annoMax) " +
+            "AND (:importoMin IS NULL OR f.importo >= :importoMin) " +
+            "AND (:importoMax IS NULL OR f.importo <= :importoMax)")
     Page<Fattura> findWithFilters(@Param("nome") String nome,
                                   @Param("statoFattura") StatoFattura statoFattura,
                                   @Param("dataMin") LocalDate dataMin,
@@ -34,8 +34,9 @@ public interface FatturaRepository extends JpaRepository<Fattura, UUID> {
                                   @Param("annoMin") Integer annoMin,
                                   @Param("annoMax") Integer annoMax,
                                   @Param("importoMin") Double importoMin,
-                                  @Param("importoMin") Double importoMax,
+                                  @Param("importoMax") Double importoMax,
                                   Pageable pageable);
+
     Optional<Fattura> findByNumero(int numero);
 
 }
