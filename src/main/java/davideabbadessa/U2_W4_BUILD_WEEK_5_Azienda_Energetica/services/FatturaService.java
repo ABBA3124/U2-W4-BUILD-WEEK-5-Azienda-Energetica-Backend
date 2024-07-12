@@ -85,11 +85,11 @@ public class FatturaService {
         }
 
         if (annoMin != null) {
-            predicates.add(cb.greaterThanOrEqualTo(cb.function("year", Integer.class, fattura.get("data")), annoMin));
+            predicates.add(cb.greaterThanOrEqualTo(cb.function("extract", Integer.class, cb.literal("year from "), fattura.get("data")), annoMin));
         }
 
         if (annoMax != null) {
-            predicates.add(cb.lessThanOrEqualTo(cb.function("year", Integer.class, fattura.get("data")), annoMax));
+            predicates.add(cb.lessThanOrEqualTo(cb.function("extract", Integer.class, cb.literal("year from "), fattura.get("data")), annoMax));
         }
 
         if (importoMin != null) {

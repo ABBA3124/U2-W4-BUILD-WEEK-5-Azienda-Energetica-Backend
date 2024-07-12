@@ -69,7 +69,7 @@ public class FatturaController {
                                                  @RequestParam(required = false) Double importoMax,
                                                  @RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "10") int size,
-                                                 @RequestParam(defaultValue = "id") String sortBy) {
+                                                 @RequestParam(defaultValue = "numero") String sortBy) {
         StatusFattura stato = null;
         if (statoFattura != null) {
             stato = StatusFattura.getStatoFattura(statoFattura);

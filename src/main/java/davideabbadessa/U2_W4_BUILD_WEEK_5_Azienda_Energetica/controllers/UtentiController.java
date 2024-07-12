@@ -64,12 +64,12 @@ public class UtentiController {
 
     @PatchMapping("/{utenteId}/avatar")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Utente uploadAvatarFromAdmin(@PathVariable UUID userId, @RequestParam("avatar") MultipartFile image) throws IOException {
-        return this.utenteService.uploadImage(userId, image);
+    public Utente uploadAvatarFromAdmin(@PathVariable UUID utenteId, @RequestParam("avatar") MultipartFile image) throws IOException {
+        return this.utenteService.uploadImage(utenteId, image);
     }
 
     @PatchMapping("/me/avatar")
-    public Utente uploadAvatar(@PathVariable UUID userId, @RequestParam("avatar") MultipartFile image) throws IOException {
-        return this.utenteService.uploadImage(userId, image);
+    public Utente uploadAvatar(@AuthenticationPrincipal Utente user, @RequestParam("avatar") MultipartFile image) throws IOException {
+        return this.utenteService.uploadImage(user.getId(), image);
     }
 }
