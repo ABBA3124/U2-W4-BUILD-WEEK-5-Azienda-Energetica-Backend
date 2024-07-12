@@ -2,6 +2,7 @@ package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.config.MailgunSender;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Ruolo;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Utente;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.Role;
@@ -33,6 +34,9 @@ public class UtenteService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private MailgunSender mailgunSender;
+
     public Utente findById(UUID utenteId) {
         return this.utenteRepository.findById(utenteId).orElseThrow(() -> new NotFoundException(utenteId));
     }
@@ -49,7 +53,9 @@ public class UtenteService {
         } else {
             throw new BadRequestException("L'utente " + nuovoUtenteDTO.nome() + " possiede già questo ruolo");
         }
-        return utenteRepository.save(nuovoUtente);
+        utenteRepository.save(nuovoUtente);
+        mailgunSender.sendRegistrationEmail(nuovoUtente);
+        return nuovoUtente;
     }
 
     public Page<Utente> getUtenti(int pageNumber, int pageSize, String sortBy) {
@@ -80,4 +86,6 @@ public class UtenteService {
         found.setAvatar(url);
         return this.utenteRepository.save(found);
     }
+
+
 }
