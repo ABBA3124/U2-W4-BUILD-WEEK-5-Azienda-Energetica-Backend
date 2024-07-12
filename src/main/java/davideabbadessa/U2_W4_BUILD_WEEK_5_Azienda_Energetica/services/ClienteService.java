@@ -111,6 +111,10 @@ public class ClienteService {
 
         List<Predicate> predicates = new ArrayList<>();
 
+        if (nome != null && !nome.isEmpty()) {
+            predicates.add(cb.like(cliente.get("ragioneSociale"), "%" + nome + "%"));
+        }
+
         if (fatturatoAnnualeMin != null) {
             predicates.add(cb.greaterThanOrEqualTo(cliente.get("fatturatoAnnuale"), fatturatoAnnualeMin));
         }
