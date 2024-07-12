@@ -18,7 +18,7 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String authenticateUtenteAndGenerateToken(UtenteLoginDTO body) {
+    public String authenticateUserAndGenerateToken(UtenteLoginDTO body) {
         Utente nuovoUtente = this.utenteService.findByEmail(body.email());
         if (passwordEncoder.matches(body.password(), nuovoUtente.getPassword())) {
             return jwtTokenConfiguration.createToken(nuovoUtente);

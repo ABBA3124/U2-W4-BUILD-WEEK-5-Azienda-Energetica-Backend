@@ -1,6 +1,12 @@
 package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.runners;
 
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Provincia;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Ruolo;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.StatoFattura;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.Role;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.StatusFattura;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.repositories.RuoloRepository;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.repositories.StatoFatturaRepository;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.ComuneService;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.CsvImportService;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.ProvinciaService;
@@ -23,6 +29,11 @@ public class Runner implements CommandLineRunner {
     @Autowired
     private ComuneService comuneService;
 
+    @Autowired
+    private RuoloRepository ruoloRepository;
+
+    @Autowired
+    private StatoFatturaRepository statoFatturaRepository;
 
     @Override
     @Transactional
@@ -40,5 +51,28 @@ public class Runner implements CommandLineRunner {
         List<Provincia> provinceSenzaComuni = provinciaService.trovaProvinceSenzaComuni();
         provinceSenzaComuni.forEach(System.out::println);
 
+        if (!ruoloRepository.existsByRole(Role.ADMIN)) {
+            ruoloRepository.save(new Ruolo(Role.ADMIN));
+        }
+
+        if (!ruoloRepository.existsByRole(Role.USER)) {
+            ruoloRepository.save(new Ruolo(Role.USER));
+        }
+
+        if (!statoFatturaRepository.existsByStato(StatusFattura.EMESSA)) {
+            statoFatturaRepository.save(new StatoFattura(StatusFattura.EMESSA));
+        }
+
+        if (!statoFatturaRepository.existsByStato(StatusFattura.PAGATA)) {
+            statoFatturaRepository.save(new StatoFattura(StatusFattura.PAGATA));
+        }
+
+        if (!statoFatturaRepository.existsByStato(StatusFattura.DA_SALDARE)) {
+            statoFatturaRepository.save(new StatoFattura(StatusFattura.DA_SALDARE));
+        }
+
+        if (!statoFatturaRepository.existsByStato(StatusFattura.SCADUTA)) {
+            statoFatturaRepository.save(new StatoFattura(StatusFattura.SCADUTA));
+        }
     }
 }

@@ -9,10 +9,9 @@ public record NewFatturaDTO(
         String data,
         @NotNull
         double importo,
-        @NotEmpty(message = "Il numero di fattura deve essere obbligatorio")
-        String numero,
         @NotBlank
         String statoFattura,
         @NotBlank
         String cliente
-) {}
+) {
+}
