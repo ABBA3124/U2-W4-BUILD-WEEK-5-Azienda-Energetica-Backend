@@ -9,21 +9,29 @@ import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.TipoIndirizzo
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.exceptions.NotFoundException;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewClienteDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.repositories.ClienteRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class ClienteService {
 
+    @PersistenceContext
+    EntityManager entityManager;
     @Autowired
     private ClienteRepository clienteRepository;
     @Autowired
@@ -96,8 +104,49 @@ public class ClienteService {
                                              String sortby) {
         if (pageSize > 100) pageSize = 100;
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortby));
-        return clienteRepository.findWithFilters(nome, fatturatoAnnualeMin,
-                fatturatoAnnualeMax, dataInserimentoMin, dataInserimentoMax, dataUltimoContattoMin, dataUltimoContattoMax, pageable);
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Cliente> cq = cb.createQuery(Cliente.class);
+        Root<Cliente> cliente = cq.from(Cliente.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (nome != null && !nome.isEmpty()) {
+            predicates.add(cb.like(cliente.get("ragioneSociale"), "%" + nome + "%"));
+        }
+
+        if (fatturatoAnnualeMin != null) {
+            predicates.add(cb.greaterThanOrEqualTo(cliente.get("fatturatoAnnuale"), fatturatoAnnualeMin));
+        }
+
+        if (fatturatoAnnualeMax != null) {
+            predicates.add(cb.lessThanOrEqualTo(cliente.get("fatturatoAnnuale"), fatturatoAnnualeMax));
+        }
+
+        if (dataInserimentoMin != null) {
+            predicates.add(cb.greaterThanOrEqualTo(cliente.get("dataInserimento"), dataInserimentoMin));
+        }
+
+        if (dataInserimentoMax != null) {
+            predicates.add(cb.lessThanOrEqualTo(cliente.get("dataInserimento"), dataInserimentoMax));
+        }
+
+        if (dataUltimoContattoMin != null) {
+            predicates.add(cb.greaterThanOrEqualTo(cliente.get("dataUltimoContatto"), dataUltimoContattoMin));
+        }
+
+        if (dataUltimoContattoMax != null) {
+            predicates.add(cb.lessThanOrEqualTo(cliente.get("dataUltimoContatto"), dataUltimoContattoMax));
+        }
+
+        cq.where(predicates.toArray(new Predicate[0]));
+
+        TypedQuery<Cliente> query = entityManager.createQuery(cq);
+        List<Cliente> resultList = query.setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
+
+        return new PageImpl<>(resultList, pageable, query.getResultList().size());
     }
 
     public Cliente updateCliente(UUID id, NewClienteDTO body) {
