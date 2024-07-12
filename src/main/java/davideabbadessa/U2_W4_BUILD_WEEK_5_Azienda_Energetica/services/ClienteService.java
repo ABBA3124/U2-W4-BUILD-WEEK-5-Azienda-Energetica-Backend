@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.UUID;
 
 @Service
 public class ClienteService {
@@ -82,4 +83,49 @@ public class ClienteService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortby));
         return clienteRepository.findAllByOrderByIndirizzoLegaleLocalitaAsc(pageable);
     }
+
+    public Cliente updateCliente(UUID id, NewClienteDTO body) {
+        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new NotFoundException("Cliente non trovato"));
+
+        Comune comuneClienteLegale = comuneService.trovaConNome(body.nomeComuneSedeLegale());
+        Indirizzo indirizzoSedeLegale = new Indirizzo(body.viaSedeLegale(), body.civicoSedeLegale(), body.capSedeLegale(), comuneClienteLegale, TipoIndirizzo.SEDE_LEGALE);
+        indirizzoSedeLegale.setLocalita(comuneClienteLegale.getProvincia().getNome());
+        Comune comuneClienteOperativo = comuneService.trovaConNome(body.nomeComuneSedeOperativa());
+        Indirizzo indirizzoOperativo = new Indirizzo(body.viaSedeOperativa(), body.civicoSedeOperativa(), body.capSedeOperativa(), comuneClienteOperativo, TipoIndirizzo.SEDE_OPERATIVA);
+        indirizzoOperativo.setLocalita(comuneClienteOperativo.getProvincia().getNome());
+
+        LocalDate dataUltimoContatto = null;
+        if (body.dataUltimoContatto() != null && !body.dataUltimoContatto().isEmpty()) {
+            try {
+                dataUltimoContatto = LocalDate.parse(body.dataUltimoContatto(), DateTimeFormatter.ISO_LOCAL_DATE);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Data di ultimo contatto non valida");
+            }
+        }
+
+        cliente.setRagioneSociale(body.ragioneSociale());
+        cliente.setTipoClienti(TipoClienti.getTipoClienti(body.tipoCliente().toUpperCase()));
+        cliente.setPartitaIva(body.partitaIva());
+        cliente.setFatturatoAnnuale(body.fatturatoAnnuale());
+        cliente.setPec(body.pec());
+        cliente.setTelefono(body.telefono());
+        cliente.setEmailContatto(body.emailContatto());
+        cliente.setNomeContatto(body.nomeContatto());
+        cliente.setCognomeContatto(body.cognomeContatto());
+        cliente.setTelefonoContatto(body.telefonoContatto());
+        cliente.setIndirizzoLegale(indirizzoService.save(indirizzoSedeLegale));
+        cliente.setIndirizzoOperativo(indirizzoService.save(indirizzoOperativo));
+        cliente.setDataUltimoContatto(dataUltimoContatto);
+
+        return clienteRepository.save(cliente);
+    }
+
+
+    public void deleteCliente(UUID id) {
+        if (!clienteRepository.existsById(id)) {
+            throw new NotFoundException("Cliente non trovato");
+        }
+        clienteRepository.deleteById(id);
+    }
+
 }
