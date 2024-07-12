@@ -1,5 +1,7 @@
 package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Ruolo;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Utente;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.Role;
@@ -14,18 +16,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class UtenteService {
     @Autowired
+    Cloudinary cloudinary;
+    @Autowired
     private UtenteRepository utenteRepository;
-
     @Autowired
     private RuoloService ruoloService;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -68,5 +72,12 @@ public class UtenteService {
     public void findByIdAndDelete(UUID utenteId) {
         Utente found = this.findById(utenteId);
         this.utenteRepository.delete(found);
+    }
+
+    public Utente uploadImage(UUID utenteId, MultipartFile file) throws IOException {
+        Utente found = this.findById(utenteId);
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        found.setAvatar(url);
+        return this.utenteRepository.save(found);
     }
 }

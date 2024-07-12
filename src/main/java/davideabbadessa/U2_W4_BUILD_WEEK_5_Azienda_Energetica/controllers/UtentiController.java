@@ -12,7 +12,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -56,5 +58,11 @@ public class UtentiController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void findByIdAndDelete(@PathVariable UUID utenteId) {
         this.utenteService.findByIdAndDelete(utenteId);
+    }
+
+    @PatchMapping("/{utenteId}/avatar")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Utente uploadAvatar(@PathVariable UUID userId, @RequestParam("avatar") MultipartFile image) throws IOException {
+        return this.utenteService.uploadImage(userId, image);
     }
 }
