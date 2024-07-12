@@ -111,6 +111,14 @@ public class ClienteService {
 
         List<Predicate> predicates = new ArrayList<>();
 
+        if (fatturatoAnnualeMin != null) {
+            predicates.add(cb.greaterThanOrEqualTo(cliente.get("fatturatoAnnuale"), fatturatoAnnualeMin));
+        }
+
+        if (fatturatoAnnualeMax != null) {
+            predicates.add(cb.lessThanOrEqualTo(cliente.get("fatturatoAnnuale"), fatturatoAnnualeMax));
+        }
+
         if (dataInserimentoMin != null) {
             predicates.add(cb.greaterThanOrEqualTo(cliente.get("dataInserimento"), dataInserimentoMin));
         }
