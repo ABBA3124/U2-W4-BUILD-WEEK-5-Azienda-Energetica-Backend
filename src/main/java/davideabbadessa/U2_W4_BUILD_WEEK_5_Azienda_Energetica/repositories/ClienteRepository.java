@@ -23,6 +23,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
 
     Optional<Cliente> findByRagioneSociale(String ragioneSociale);
 
+    Optional<Cliente> findByPartitaIva(String partitaIva);
+
     @Query("SELECT c FROM Cliente c " +
             "WHERE (:nome IS NULL OR c.ragioneSociale LIKE %:nome%) " +
             "AND (:fatturatoAnnualeMin IS NULL OR c.fatturatoAnnuale >= :fatturatoAnnualeMin) " +

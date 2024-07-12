@@ -6,6 +6,7 @@ import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Utente;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.exceptions.BadRequestException;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewClienteDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewEmailDTO;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewIndirizzoDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -85,4 +86,17 @@ public class ClienteController {
     public void sendEmail(@PathVariable UUID id, @AuthenticationPrincipal Utente utente, @RequestBody NewEmailDTO body) {
         clienteService.sendEmail(id, utente, body);
     }
+
+    @PatchMapping("/{id}/indirizzoLegale")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Cliente updateIndirizzoLegale(@PathVariable UUID id, @RequestBody NewIndirizzoDTO indirizzo) {
+        return clienteService.updateIndirizzoLegale(id, indirizzo);
+    }
+
+    @PatchMapping("/{id}/indirizzoOperativo")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Cliente updateIndirizzoOperativo(@PathVariable UUID id, @RequestBody NewIndirizzoDTO indirizzo) {
+        return clienteService.updateIndirizzoOperativo(id, indirizzo);
+    }
+
 }

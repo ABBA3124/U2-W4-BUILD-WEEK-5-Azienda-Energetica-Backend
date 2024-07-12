@@ -46,6 +46,12 @@ public class UtenteService {
     }
 
     public Utente save(NewUtenteDTO nuovoUtenteDTO) {
+        utenteRepository.findByEmail(nuovoUtenteDTO.email()).ifPresent(u -> {
+            throw new BadRequestException("L'utente " + nuovoUtenteDTO.email() + " esiste già!");
+        });
+        utenteRepository.findByUsername(nuovoUtenteDTO.username()).ifPresent(u -> {
+            throw new BadRequestException("L'utente " + nuovoUtenteDTO.username() + " esiste più!");
+        });
         Ruolo found = ruoloService.findByRole(Role.USER);
         Utente nuovoUtente = new Utente(nuovoUtenteDTO.username(), nuovoUtenteDTO.email(), passwordEncoder.encode(nuovoUtenteDTO.password()), nuovoUtenteDTO.nome(), nuovoUtenteDTO.cognome());
         if (!nuovoUtente.getRuoli().contains(found)) {

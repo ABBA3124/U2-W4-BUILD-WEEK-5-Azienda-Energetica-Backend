@@ -8,9 +8,11 @@ import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Indirizzo;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Utente;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.TipoClienti;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.TipoIndirizzo;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.exceptions.BadRequestException;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.exceptions.NotFoundException;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewClienteDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewEmailDTO;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewIndirizzoDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.repositories.ClienteRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -86,6 +88,10 @@ public class ClienteService {
         );
 
         nuovoCliente.setDataUltimoContatto(dataUltimoContatto);
+
+        clienteRepository.findByPartitaIva(body.partitaIva()).ifPresent(cliente -> {
+            throw new BadRequestException("Il cliente con partita iva " + nuovoCliente.getPartitaIva() + " esiste già!");
+        });
 
 
         return clienteRepository.save(nuovoCliente);
@@ -206,4 +212,17 @@ public class ClienteService {
         Cliente clienteTrovato = findById(utenteId);
         mailgunSender.sendAdminMail(utente, clienteTrovato, body.oggetto(), body.testo());
     }
+
+    public Cliente updateIndirizzoLegale(UUID id, NewIndirizzoDTO body) {
+        Cliente clienteAggiornato = findById(id);
+        clienteAggiornato.setIndirizzoLegale(indirizzoService.updateIndirizzoLegale(clienteAggiornato.getIndirizzoLegale().getId(), body));
+        return clienteRepository.save(clienteAggiornato);
+    }
+
+    public Cliente updateIndirizzoOperativo(UUID id, NewIndirizzoDTO body) {
+        Cliente clienteAggiornato = findById(id);
+        clienteAggiornato.setIndirizzoOperativo(indirizzoService.updateIndirizzoOperativo(clienteAggiornato.getIndirizzoOperativo().getId(), body));
+        return clienteRepository.save(clienteAggiornato);
+    }
+
 }
