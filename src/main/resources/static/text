@@ -1,0 +1,14 @@
+BEGIN;
+
+-- Rimuovere il ruolo corrente
+DELETE FROM utente_ruoli
+WHERE utente_id = -- valore attuale
+  AND ruolo_id = -- valore attuale;
+
+-- Aggiungere il nuovo ruolo
+INSERT INTO utente_ruoli (utente_id, ruolo_id)
+VALUES (-- nuovo valore, --nuovo valore);
+
+COMMIT;
+
+Script per la modifica di tabelle che sono bloccate
