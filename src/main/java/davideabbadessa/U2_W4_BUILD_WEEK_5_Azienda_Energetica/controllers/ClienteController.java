@@ -2,13 +2,16 @@ package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.controllers;
 
 
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Cliente;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Utente;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.exceptions.BadRequestException;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewClienteDTO;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewEmailDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
@@ -75,5 +78,11 @@ public class ClienteController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteCliente(@PathVariable UUID id) {
         clienteService.deleteCliente(id);
+    }
+
+    @PostMapping("/{id}/email")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void sendEmail(@PathVariable UUID id, @AuthenticationPrincipal Utente utente, @RequestBody NewEmailDTO body) {
+        clienteService.sendEmail(id, utente, body);
     }
 }

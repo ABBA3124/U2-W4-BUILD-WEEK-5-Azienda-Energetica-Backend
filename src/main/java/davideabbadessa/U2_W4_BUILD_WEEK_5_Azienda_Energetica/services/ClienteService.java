@@ -1,13 +1,16 @@
 package davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services;
 
 
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.config.MailgunSender;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Cliente;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Comune;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Indirizzo;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.entities.Utente;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.TipoClienti;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.enums.TipoIndirizzo;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.exceptions.NotFoundException;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewClienteDTO;
+import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewEmailDTO;
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.repositories.ClienteRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -38,6 +41,8 @@ public class ClienteService {
     private ComuneService comuneService;
     @Autowired
     private IndirizzoService indirizzoService;
+    @Autowired
+    private MailgunSender mailgunSender;
 
     public Page<Cliente> getClienti(int pageNumber, int pageSize, String sortby) {
         if (pageSize > 100) pageSize = 100;
@@ -191,5 +196,14 @@ public class ClienteService {
             throw new NotFoundException("Cliente non trovato");
         }
         clienteRepository.deleteById(id);
+    }
+
+    public Cliente findById(UUID id) {
+        return clienteRepository.findById(id).orElseThrow(() -> new NotFoundException("Cliente non trovato"));
+    }
+
+    public void sendEmail(UUID utenteId, Utente utente, NewEmailDTO body) {
+        Cliente clienteTrovato = findById(utenteId);
+        mailgunSender.sendAdminMail(utente, clienteTrovato, body.oggetto(), body.testo());
     }
 }
