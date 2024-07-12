@@ -7,7 +7,6 @@ import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewCliente
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -50,10 +49,10 @@ public class ClienteController {
     public Page<Cliente> getAllClientiWithFilter(@RequestParam(required = false) String nome,
                                                  @RequestParam(required = false) Double fatturatoAnnualeMin,
                                                  @RequestParam(required = false) Double fatturatoAnnualeMax,
-                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInserimentoMin,
-                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInserimentoMax,
-                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataUltimoContattoMin,
-                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataUltimoContattoMax,
+                                                 @RequestParam(required = false) LocalDate dataInserimentoMin,
+                                                 @RequestParam(required = false) LocalDate dataInserimentoMax,
+                                                 @RequestParam(required = false) LocalDate dataUltimoContattoMin,
+                                                 @RequestParam(required = false) LocalDate dataUltimoContattoMax,
                                                  @RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "10") int size,
                                                  @RequestParam(defaultValue = "id") String sortBy) {
