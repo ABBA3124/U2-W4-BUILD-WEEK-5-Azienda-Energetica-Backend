@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -58,5 +59,22 @@ public class ClienteController {
                                                  @RequestParam(defaultValue = "id") String sortBy) {
         return this.clienteService.trovaTuttiConFiltri(nome, fatturatoAnnualeMin,
                 fatturatoAnnualeMax, dataInserimentoMin, dataInserimentoMax, dataUltimoContattoMin, dataUltimoContattoMax, page, size, sortBy);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Cliente updateCliente(@PathVariable UUID id, @RequestBody @Validated NewClienteDTO body, BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            throw new BadRequestException(validationResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(", ")));
+        }
+        return clienteService.updateCliente(id, body);
+    }
+
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void deleteCliente(@PathVariable UUID id) {
+        clienteService.deleteCliente(id);
     }
 }
