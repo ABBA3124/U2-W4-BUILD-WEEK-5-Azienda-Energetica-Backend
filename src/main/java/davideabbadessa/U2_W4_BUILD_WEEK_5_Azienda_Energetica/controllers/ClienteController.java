@@ -7,6 +7,7 @@ import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.payloads.NewCliente
 import davideabbadessa.U2_W4_BUILD_WEEK_5_Azienda_Energetica.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -14,7 +15,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
+import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 @RestController
@@ -44,20 +45,18 @@ public class ClienteController {
         return this.clienteService.ordinaTuttiIClientiPerProvincia(page, size, sortBy);
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public Cliente updateCliente(@PathVariable UUID id, @RequestBody @Validated NewClienteDTO body, BindingResult validationResult) {
-        if (validationResult.hasErrors()) {
-            throw new BadRequestException(validationResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(", ")));
-        }
-        return clienteService.updateCliente(id, body);
-    }
-
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public void deleteCliente(@PathVariable UUID id) {
-        clienteService.deleteCliente(id);
+    @GetMapping("/filter")
+    public Page<Cliente> getAllClientiWithFilter(@RequestParam(required = false) String nome,
+                                                 @RequestParam(required = false) Double fatturatoAnnualeMin,
+                                                 @RequestParam(required = false) Double fatturatoAnnualeMax,
+                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInserimentoMin,
+                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInserimentoMax,
+                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataUltimoContattoMin,
+                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataUltimoContattoMax,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "10") int size,
+                                                 @RequestParam(defaultValue = "id") String sortBy) {
+        return this.clienteService.trovaTuttiConFiltri(nome, fatturatoAnnualeMin,
+                fatturatoAnnualeMax, dataInserimentoMin, dataInserimentoMax, dataUltimoContattoMin, dataUltimoContattoMax, page, size, sortBy);
     }
 }
